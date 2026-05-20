@@ -35,6 +35,7 @@
 
           title.setAttribute("aria-label", text);
           title.textContent = "";
+          var animatedCount = 0;
 
           for (var i = 0; i < text.length; i++) {
             var ch = text[i];
@@ -53,13 +54,169 @@
             var letter = document.createElement("span");
             letter.className = "hero-letter";
             letter.style.setProperty("--i", String(i));
-            letter.textContent = ch;
+            animatedCount++;
+
+            var glyph = document.createElement("span");
+            glyph.className = "hero-letter-glyph";
+            glyph.textContent = ch;
+
+            letter.appendChild(glyph);
 
             cell.appendChild(letter);
             title.appendChild(cell);
+
+            letter.addEventListener(
+              "animationend",
+              function () {
+                animatedCount--;
+                if (animatedCount === 0) {
+                  title.classList.add("hero-rise-done");
+                }
+              },
+              { once: true }
+            );
+          }
+
+          if (animatedCount === 0) {
+            title.classList.add("hero-rise-done");
           }
 
           title.classList.add("is-ready");
+        }
+
+        function initHeroMagnetism() {
+          var title = document.querySelector(".hero-title");
+          if (!title) return;
+
+          var letters = title.querySelectorAll(".hero-letter-glyph");
+          if (!letters.length) return;
+
+          var mqWide = window.matchMedia("(min-width: 701px)");
+          var mqHover = window.matchMedia("(hover: hover)");
+          var mqFine = window.matchMedia("(pointer: fine)");
+
+          var MAX_OFFSET = 20;
+          var EFFECT_RADIUS = 400;
+          var EASE = 0.1;
+          var pointerX = 0;
+          var pointerY = 0;
+          var hasPointer = false;
+          var isActive = title.classList.contains("hero-rise-done");
+          var isEnabled = false;
+          var rafId = 0;
+          var centerRafId = 0;
+          var states = [];
+          var centers = [];
+          var cells = title.querySelectorAll(".hero-letter-cell");
+
+          for (var s = 0; s < letters.length; s++) {
+            states.push({ x: 0, y: 0 });
+            centers.push({ x: 0, y: 0 });
+          }
+
+          function measureCenters() {
+            centerRafId = 0;
+            for (var i = 0; i < cells.length; i++) {
+              var rect = cells[i].getBoundingClientRect();
+              centers[i].x = rect.left + rect.width / 2;
+              centers[i].y = rect.top + rect.height / 2;
+            }
+          }
+
+          function requestCenterMeasure() {
+            if (centerRafId) return;
+            centerRafId = window.requestAnimationFrame(function () {
+              measureCenters();
+              if (isEnabled && isActive && hasPointer) requestApply();
+            });
+          }
+
+          function applyOffsets() {
+            var shouldContinue = false;
+
+            for (var i = 0; i < letters.length; i++) {
+              var letter = letters[i];
+              var targetX = 0;
+              var targetY = 0;
+
+              if (isEnabled && isActive && hasPointer) {
+                var centerX = centers[i].x;
+                var centerY = centers[i].y;
+                var deltaX = centerX - pointerX;
+                var deltaY = centerY - pointerY;
+                var distance = Math.hypot(deltaX, deltaY);
+
+                if (distance > 0 && distance < EFFECT_RADIUS) {
+                  var intensity = 1 - distance / EFFECT_RADIUS;
+                  var offset = MAX_OFFSET * intensity * intensity;
+                  targetX = (deltaX / distance) * offset;
+                  targetY = (deltaY / distance) * offset;
+                }
+              }
+
+              var state = states[i];
+              state.x += (targetX - state.x) * EASE;
+              state.y += (targetY - state.y) * EASE;
+
+              if (Math.abs(targetX - state.x) > 0.05 || Math.abs(targetY - state.y) > 0.05) {
+                shouldContinue = true;
+              }
+
+              letter.style.setProperty("--mx", state.x.toFixed(2) + "px");
+              letter.style.setProperty("--my", state.y.toFixed(2) + "px");
+            }
+
+            if (shouldContinue) {
+              rafId = window.requestAnimationFrame(applyOffsets);
+              return;
+            }
+
+            rafId = 0;
+          }
+
+          function requestApply() {
+            if (rafId) return;
+            rafId = window.requestAnimationFrame(applyOffsets);
+          }
+
+          function updateEnabledState() {
+            var nextEnabled = mqWide.matches && mqHover.matches && mqFine.matches;
+            if (nextEnabled === isEnabled) return;
+            isEnabled = nextEnabled;
+            title.classList.toggle("hero-magnet-enabled", isEnabled);
+            hasPointer = false;
+            requestCenterMeasure();
+            requestApply();
+          }
+
+          window.addEventListener("mousemove", function (event) {
+            if (!isEnabled || !isActive) return;
+            pointerX = event.clientX;
+            pointerY = event.clientY;
+            hasPointer = true;
+            requestApply();
+          });
+
+          window.addEventListener("mouseleave", function () {
+            if (!isEnabled || !isActive) return;
+            hasPointer = false;
+            requestApply();
+          });
+
+          window.addEventListener("scroll", requestCenterMeasure, { passive: true });
+          window.addEventListener("resize", requestCenterMeasure, { passive: true });
+
+          title.addEventListener("animationend", function () {
+            if (!title.classList.contains("hero-rise-done")) return;
+            isActive = true;
+            requestCenterMeasure();
+          });
+
+          mqWide.addEventListener("change", updateEnabledState);
+          mqHover.addEventListener("change", updateEnabledState);
+          mqFine.addEventListener("change", updateEnabledState);
+          requestCenterMeasure();
+          updateEnabledState();
         }
 
         function syncToggle() {
@@ -81,6 +238,7 @@
         });
 
         prepareHeroTitle();
+        initHeroMagnetism();
         syncToggle();
       })();
     </script>
