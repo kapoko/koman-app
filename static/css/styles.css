@@ -361,6 +361,10 @@ a:hover {
     gap: 0.7rem;
   }
 
+  .project-grid {
+    gap: 3.5rem;
+  }
+
   .project-logo {
     width: 56px;
     height: 56px;
