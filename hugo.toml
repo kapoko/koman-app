@@ -1,0 +1,7 @@
+baseURL = "https://koman.app/"
+locale = "en-us"
+title = "Koman"
+
+[params]
+  owner = "Koman"
+  intro = "Audio focused utility apps."

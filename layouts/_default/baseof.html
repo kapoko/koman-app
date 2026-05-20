@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
+    <meta name="description" content="koman.app showcases software projects by Koman." />
+    <script>
+      document.documentElement.classList.add("js");
+    </script>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <div class="site-frame">
+      {{ block "main" . }}{{ end }}
+      <footer class="site-footer">
+        <p>&copy; {{ now.Format "2006" }} {{ .Site.Params.owner }}</p>
+      </footer>
+    </div>
+    <script>
+      (function () {
+        var root = document.body;
+        var savedTheme = window.localStorage.getItem("theme");
+        var theme = savedTheme === "dark" ? "dark" : "light";
+        root.setAttribute("data-theme", theme);
+
+        function prepareHeroTitle() {
+          var title = document.querySelector(".hero-title");
+          if (!title) return;
+          var text = title.textContent.trim();
+          if (!text) {
+            title.classList.add("is-ready");
+            return;
+          }
+
+          title.setAttribute("aria-label", text);
+          title.textContent = "";
+
+          for (var i = 0; i < text.length; i++) {
+            var ch = text[i];
+            if (ch === " ") {
+              var spacer = document.createElement("span");
+              spacer.className = "hero-space";
+              spacer.setAttribute("aria-hidden", "true");
+              title.appendChild(spacer);
+              continue;
+            }
+
+            var cell = document.createElement("span");
+            cell.className = "hero-letter-cell";
+            cell.setAttribute("aria-hidden", "true");
+
+            var letter = document.createElement("span");
+            letter.className = "hero-letter";
+            letter.style.setProperty("--i", String(i));
+            letter.textContent = ch;
+
+            cell.appendChild(letter);
+            title.appendChild(cell);
+          }
+
+          title.classList.add("is-ready");
+        }
+
+        function syncToggle() {
+          var toggle = document.getElementById("theme-toggle");
+          if (!toggle) return;
+          var isDark = root.getAttribute("data-theme") === "dark";
+          toggle.setAttribute("aria-label", isDark ? "Switch to light mode" : "Switch to dark mode");
+          toggle.setAttribute("aria-pressed", String(!isDark));
+        }
+
+        document.addEventListener("click", function (event) {
+          var toggle = event.target.closest("#theme-toggle");
+          if (!toggle) return;
+          var isDark = root.getAttribute("data-theme") === "dark";
+          var nextTheme = isDark ? "light" : "dark";
+          root.setAttribute("data-theme", nextTheme);
+          window.localStorage.setItem("theme", nextTheme);
+          syncToggle();
+        });
+
+        prepareHeroTitle();
+        syncToggle();
+      })();
+    </script>
+  </body>
+</html>

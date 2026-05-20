@@ -1,0 +1,8 @@
+{{ define "main" }}
+  <main class="page-shell">
+    <article>
+      <h1>{{ .Title }}</h1>
+      {{ with .Content }}{{ . }}{{ end }}
+    </article>
+  </main>
+{{ end }}

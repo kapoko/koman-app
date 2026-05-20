@@ -1,0 +1,336 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap");
+
+:root {
+  --bg: #ffffff;
+  --paper: transparent;
+  --ink: #000000;
+  --muted: #222222;
+  --accent: #000000;
+  --accent-2: #000000;
+  --shadow: none;
+  --chip-bg: linear-gradient(135deg, rgba(240, 240, 240, 0.78), rgba(225, 225, 225, 0.52));
+  --chip-border: rgba(255, 255, 255, 0.65);
+  --toggle-bg: transparent;
+  --toggle-ink: #000000;
+}
+
+body[data-theme="dark"] {
+  --bg: #000000;
+  --paper: transparent;
+  --ink: #ffffff;
+  --muted: #cfcfcf;
+  --accent: #ffffff;
+  --accent-2: #ffffff;
+  --shadow: none;
+  --chip-bg: linear-gradient(135deg, rgba(150, 150, 150, 0.32), rgba(115, 115, 115, 0.2));
+  --chip-border: rgba(255, 255, 255, 0.34);
+  --toggle-bg: transparent;
+  --toggle-ink: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
+  line-height: 1.6;
+  background: var(--bg);
+}
+
+.site-frame {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+body[data-theme="dark"] {
+  background: var(--bg);
+}
+
+.page-shell {
+  width: 100%;
+  margin: 0 auto;
+  padding: 5.5rem 3.5vw 6rem;
+  flex: 1;
+}
+
+.site-footer {
+  padding: 0 3.5vw 1.8rem;
+}
+
+.site-footer p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.hero {
+  margin-bottom: 2.8rem;
+}
+
+@media (min-width: 900px) {
+  .hero {
+    margin-top: 5.5rem;
+    margin-bottom: 7rem;
+  }
+}
+
+.hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.kicker {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent-2);
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.theme-toggle {
+  border: 0;
+  background: var(--toggle-bg);
+  color: var(--toggle-ink);
+  border-radius: 0;
+  width: 2.2rem;
+  height: 2.2rem;
+  padding: 0;
+  font-family: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  justify-content: center;
+}
+
+.theme-icon {
+  width: 1.15rem;
+  height: 1.15rem;
+  display: inline-flex;
+}
+
+.theme-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+.theme-icon-sun {
+  display: inline-flex;
+}
+
+body[data-theme="dark"] .theme-icon-sun {
+  display: none;
+}
+
+body[data-theme="dark"] .theme-icon-moon {
+  display: inline-flex;
+}
+
+.theme-icon-moon {
+  display: none;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-1px) scale(1.01);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 2px;
+}
+
+h1 {
+  margin: 0.35rem 0 0;
+  font-family: "Plus Jakarta Sans", "Avenir Next", "Segoe UI", sans-serif;
+  font-weight: 800;
+  font-size: clamp(4.6rem, 12vw, 9rem);
+  line-height: 1.04;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+
+.js .hero-title {
+  visibility: hidden;
+}
+
+.js .hero-title.is-ready {
+  visibility: visible;
+}
+
+.hero-letter-cell {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.hero-letter {
+  display: inline-block;
+  transform: translateY(112%);
+  animation: hero-rise 760ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: calc(70ms + (var(--i) * 36ms));
+}
+
+.hero-space {
+  display: inline-block;
+  width: 0.34em;
+}
+
+.intro {
+  max-width: 66ch;
+  color: var(--muted);
+  margin-top: 1rem;
+  font-size: 1.07rem;
+  line-height: 1.75;
+}
+
+.project-grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.project-card {
+  background: var(--paper);
+  border-radius: 0;
+  padding: 0;
+  box-shadow: var(--shadow);
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+}
+
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin: 0 0 0.8rem;
+}
+
+.chip {
+  display: inline-block;
+  margin: 0;
+  border-radius: 999px;
+  background: var(--chip-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--accent);
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  padding: 0.32rem 0.72rem;
+  font-weight: 700;
+}
+
+.project-logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 0;
+  object-fit: cover;
+  background: transparent;
+  flex: 0 0 auto;
+}
+
+.project-content {
+  min-width: 0;
+}
+
+h2 {
+  margin: 0;
+  font-family: "Plus Jakarta Sans", "Avenir Next", "Segoe UI", sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  line-height: 1.2;
+  text-transform: none;
+  text-wrap: balance;
+}
+
+.project-card p {
+  color: var(--muted);
+  margin: 0.7rem 0 1.1rem;
+  max-inline-size: 62ch;
+  line-height: 1.7;
+  text-wrap: pretty;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+a {
+  text-decoration: none;
+  color: var(--accent-2);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
+}
+
+.link-icon {
+  width: 0.95rem;
+  height: 0.95rem;
+  display: inline-flex;
+}
+
+.link-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+@keyframes hero-rise {
+  from {
+    transform: translateY(112%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 700px) {
+  .page-shell {
+    padding: 3.8rem 4vw 4.6rem;
+  }
+
+  .site-footer {
+    padding: 0 4vw 1.4rem;
+  }
+
+  h1 {
+    font-size: clamp(3rem, 15vw, 4.2rem);
+  }
+
+  .hero-top {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .theme-toggle {
+    margin-top: 0.3rem;
+  }
+
+  .project-card {
+    border-radius: 0;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .project-logo {
+    width: 56px;
+    height: 56px;
+  }
+}
