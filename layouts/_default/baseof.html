@@ -15,7 +15,9 @@
     <div class="site-frame">
       {{ block "main" . }}{{ end }}
       <footer class="site-footer">
-        <p>&copy; {{ now.Format "2006" }} {{ .Site.Params.owner }}</p>
+        {{- $startYear := .Site.Params.startYear | default 2026 -}}
+        {{- $currentYear := now.Format "2006" | int -}}
+        <p>&copy; {{ if eq $startYear $currentYear }}{{ $startYear }}{{ else }}{{ $startYear }} - {{ $currentYear }}{{ end }} {{ .Site.Params.owner }}</p>
       </footer>
     </div>
     <script>
