@@ -28,7 +28,9 @@
         <article class="project-card">
             <img class="project-logo" src="/images/{{ .Params.logo }}" alt="{{ .Title }} logo" loading="lazy" />
             <div class="project-content">
-                <h2>{{ .Title }}</h2>
+                <h2>
+                    <a class="project-title-link" href="{{ .Params.project_url }}" target="_blank" rel="noopener noreferrer">{{ .Title }}</a>
+                </h2>
                 <p class="chip-list">{{ range .Params.tags }}<span class="chip">{{ . }}</span>{{ end }}</p>
                 <p>{{ .Params.tagline }}</p>
                 <a href="{{ .Params.project_url }}" target="_blank" rel="noopener noreferrer">
