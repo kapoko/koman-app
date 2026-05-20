@@ -4,7 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
-    <meta name="description" content="koman.app showcases software projects by Koman." />
+    <meta name="description" content="{{ .Site.Params.description | default "koman.app showcases software projects by Koman." }}" />
+    {{ partial "head.html" . }}
     <script>
       document.documentElement.classList.add("js");
     </script>
